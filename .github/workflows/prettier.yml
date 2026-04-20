@@ -1,0 +1,29 @@
+name: Prettier Check
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  Format:
+    name: Check formatting with Prettier
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: npm install prettier prettier-plugin-organize-imports prettier-plugin-packagejson prettier-plugin-astro
+
+      - name: Run Prettier
+
+        run: prettier --check .
