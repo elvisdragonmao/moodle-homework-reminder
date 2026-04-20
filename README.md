@@ -42,7 +42,7 @@ If an assignment is still not submitted and its deadline is within 24 hours, the
 
 ## Environment variables
 
-Create a `.env` file:
+For local Node.js runs, create a `.env` file:
 
 ```env
 MOODLE_BASE_URL=https://your-moodle-domain
@@ -135,7 +135,19 @@ Add these repository secrets:
 
 The repo now includes `worker.js` and a cron trigger in `wrangler.jsonc`.
 
-Set Worker secrets:
+Important: Cloudflare Workers do not read your Node.js `.env` file.
+
+For local `wrangler dev`, create a `.dev.vars` file:
+
+```env
+MOODLE_BASE_URL=https://e3p.nycu.edu.tw
+USERNAME=your-username
+PASSWORD=your-password
+NTFY_TOPIC_URL=https://ntfy.sh/your-topic-name
+DAYS=1
+```
+
+For deployed Workers, set secrets:
 
 ```bash
 wrangler secret put MOODLE_BASE_URL
@@ -156,6 +168,7 @@ Notes:
 - The Worker runs every hour via `0 * * * *`
 - `fetch()` is also exposed, so you can manually trigger it with `wrangler dev` or the deployed URL
 - This Worker intentionally ignores `state.json`, so the same unfinished assignment can notify again on later hourly runs
+- If env is missing, the response now tells you exactly which keys are missing
 
 ### 3. Zeabur
 

@@ -1,4 +1,7 @@
 function getConfig(rawEnv) {
+	const requiredKeys = ["MOODLE_BASE_URL", "USERNAME", "PASSWORD", "NTFY_TOPIC_URL"];
+	const missingKeys = requiredKeys.filter(key => !rawEnv[key]);
+
 	const config = {
 		baseUrl: rawEnv.MOODLE_BASE_URL,
 		username: rawEnv.USERNAME,
@@ -7,8 +10,8 @@ function getConfig(rawEnv) {
 		days: Number(rawEnv.DAYS) || 1
 	};
 
-	if (!config.baseUrl || !config.username || !config.password || !config.ntfyTopicUrl) {
-		throw new Error("Please set MOODLE_BASE_URL, USERNAME, PASSWORD, and NTFY_TOPIC_URL.");
+	if (missingKeys.length > 0) {
+		throw new Error(`Missing environment variables: ${missingKeys.join(", ")}`);
 	}
 
 	return config;
